@@ -17,6 +17,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+Route::post('/register', 'Auth\RegisterController@store')->name('register');
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth' => 'admin']], function() {
     Route::get('/', 'AdminController@index')->name('admin.dashboard');
@@ -25,8 +26,19 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth' => 'admin']], functio
 Route::group(['prefix' => 'books'], function() {
     Route::get('/', 'BookController@index')->name('books.list');
     Route::get('{book}/details', 'BookController@detail')->name('book.detail');
+    Route::get('/categories/{category}', 'BookController@showByCategory')->name('book.category');
+    Route::get('/publishers/{publisher}', 'BookController@showByPublisher')->name('book.publisher');
+    Route::get('/authors/{author}', 'BookController@showByAuthor')->name('book.author');
+    Route::get('/search', 'BookController@searchByCategory')->name('book.search');
+    Route::get('{category}', 'BookController@getChildrenCategories')->name('book.allcategories');
+    Route::get('/like/{book}', 'BookController@likeBook')->name('book.like')->middleware('auth');
+    Route::get('/unlike/{book}', 'BookController@unlikeBook')->name('book.unlike')->middleware('auth');
+    Route::get('/status/available', 'BookController@showByStatus')->name('book.status');
 });
 
 Route::group(['prefix' => 'users'], function() {
     Route::get('{user}/details', 'UserController@detail')->name('user.detail');
 });
+
+Route::post('/comments/{book}', 'CommentController@store')->name('comments');
+

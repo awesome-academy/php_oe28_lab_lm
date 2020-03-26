@@ -28,8 +28,7 @@
         <div class="container">
             <div class="filter-box">
                 <h3>{{ trans('page.search') }}</h3>
-                <form action="#" method="get">
-                    @csrf
+                <form action="{{ route('book.search') }}" method="GET">
                     <div class="col-md-5 col-sm-6">
                         <div class="form-group">
                             <label class="sr-only" for="keywords">{{ trans('page.keyword') }}</label>
@@ -48,7 +47,7 @@
                     </div>
                     <div class="col-md-2 col-sm-6">
                         <div class="form-group">
-                            <input class="form-control" type="submit" value="Search">
+                            <input class="form-control" type="submit" value="{{ trans('page.s') }}">
                         </div>
                     </div>
                 </form>

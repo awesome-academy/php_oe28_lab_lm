@@ -23,6 +23,11 @@ class BookController extends Controller
         try {
             $liked = false;
             $book = Book::where('slug', $slug)->firstOrFail();
+            $added = false;
+            $item = session()->has('item') ? session()->get('item') : null;
+            if (isset($item[$book->id])) {
+                $added = true;
+            }
             if (Auth::check()) {
                 $isLiked = $book->likedUsers()->wherePivot('user_id', Auth::id())->exists();
                 if ($isLiked) {
@@ -35,6 +40,7 @@ class BookController extends Controller
             return view('user.pages.booksdetail')->with([
                 'book' => $book,
                 'liked' => $liked,
+                'added' => $added,
             ]);
         } catch (ModelNotFoundException $e) {
             response()->view('errors.404_user_not_found', [], 404);
@@ -83,7 +89,7 @@ class BookController extends Controller
         $category = $request->category;
         if (empty($keywords)) {
             if ($category === 'all') {
-                return redirect()->route('books.list');
+                return redirect()->route('book.list');
             } else {
                 return redirect()->route('book.category', $category);
             }

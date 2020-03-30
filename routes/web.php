@@ -23,7 +23,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth' => 'admin']], functio
 });
 
 Route::group(['prefix' => 'books'], function() {
-    Route::get('/', 'BookController@index')->name('books.list');
+    Route::get('/', 'BookController@index')->name('book.list');
     Route::get('{book}/details', 'BookController@detail')->name('book.detail');
     Route::get('/categories/{category}', 'BookController@showByCategory')->name('book.category');
     Route::get('/publishers/{publisher}', 'BookController@showByPublisher')->name('book.publisher');
@@ -38,7 +38,14 @@ Route::group(['prefix' => 'users'], function() {
     Route::get('{user}/details', 'UserController@detail')->name('user.detail');
     Route::get('/follow/{user}', 'UserController@follow')->name('user.follow')->middleware('auth');
     Route::get('/unfollow/{user}', 'UserController@unfollow')->name('user.unfollow')->middleware('auth');
+    Route::get('/myaccount/{id}', 'UserController@myAccount')->name('user.account')->middleware('auth');
+    Route::post('/request', 'BorrowerRecordsController@request')->name('user.request')->middleware('auth');
 });
 
 Route::post('/comments/{book}', 'CommentController@store')->name('comments');
 
+Route::group(['prefix' => 'bookbag'], function() {
+    Route::get('/', 'BookbagController@index')->name('bookbag.index');
+    Route::get('/add/{book}', 'BookbagController@addBook')->name('bookbag.add');
+    Route::get('/remove/{book}', 'BookbagController@removeBook')->name('bookbag.remove');
+});
